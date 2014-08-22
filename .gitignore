@@ -41,10 +41,13 @@ com_crashlytics_export_strings.xml
 .vagrant/
 
 ### NPM ###
-npm_modules/
+node_modules/
 
 ### Bower ###
 bower_components/
 
 ### NetBeans ###
 /nbproject/
+
+### Mac
+.DS_Store
