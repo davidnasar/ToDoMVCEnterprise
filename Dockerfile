@@ -38,9 +38,5 @@ RUN cd /data && \
 
 WORKDIR /data/server
 
-#ENTRYPOINT ["nodemon"]
-
-#CMD [""]
-
 # sudo docker build -rm -t todomvc .
 # sudo docker run -i -t -v "$PWD:/data" -p 3000:3000 --name todomvc todomvc

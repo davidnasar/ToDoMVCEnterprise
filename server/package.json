@@ -1,9 +1,14 @@
 {
-  "name": "server",
+  "name": "ToDoMVCEnterprise",
   "version": "0.0.1",
+  "description": "Fusion Hackathon ToDO MVC",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fusionalliance/ToDoMVCEnterprise.git"
   },
   "dependencies": {
     "express": "~4.2.0",
@@ -12,5 +17,16 @@
     "cookie-parser": "~1.0.1",
     "body-parser": "~1.0.0",
     "jade": "~1.3.0"
-  }
+  },
+  "keywords": [
+    "Angular",
+    "ToDo",
+    "MVC"
+  ],
+  "author": "Fusion Alliance",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fusionalliance/ToDoMVCEnterprise/issues"
+  },
+  "homepage": "https://github.com/fusionalliance/ToDoMVCEnterprise"
 }
