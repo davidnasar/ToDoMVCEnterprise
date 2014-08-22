@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var passport = require('passport');
-var GoogleStrategy = require('passport-google').Strategy;
+var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 
 var routes = require('./routes/index');
@@ -23,6 +23,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, '..', 'client')));
 
 
@@ -31,18 +32,15 @@ app.use(express.static(path.join(__dirname, '..', 'client')));
 
 
 passport.use(new GoogleStrategy({
-      returnURL: 'http://todomvc.fusionalliance.com:3000/auth/google/return',
-      realm: 'http://todomvc.localhost:3000/',
-      clientID: '621475068728-hj8v7i58buo567i440gg1t512m23bkjc.apps.googleusercontent.com',
-      clientSecret: 'sDmFUgAzUx6srCNgEc6N1_CK'
-    },
-    function(identifier, profile, done) {
-      User.findOrCreate({ openId: identifier }, function(err, user) {
-        done(err, user);
-      });
-    }
+    clientID: "621475068728-hj8v7i58buo567i440gg1t512m23bkjc.apps.googleusercontent.com",
+    clientSecret: "sDmFUgAzUx6srCNgEc6N1_CK",
+    callbackURL: "http://todomvc.fusionalliance.com:3000/auth/google/return",
+    scope:  ["email","profile"]
+  },
+  function(accessToken, refreshToken, profile, done) {
+    return done(null,profile);
+  }
 ));
-
 //app.use('/', routes);
 app.use('/users', users);
 
@@ -55,8 +53,18 @@ app.get('/auth/google', passport.authenticate('google'));
 // the process by verifying the assertion.  If valid, the user will be
 // logged in.  Otherwise, authentication has failed.
 app.get('/auth/google/return',
-    passport.authenticate('google', { successRedirect: '/',
-      failureRedirect: '/login' }));
+    passport.authenticate('google', {
+        session: false,
+        failureRedirect: '/auth/login' }),
+    function(req, res) {
+        console.log(req.user)
+    
+        res.redirect('/');
+ });
+  
+app.get('/auth/login',function(){
+    console.log('this thing failed');
+});
 
 
 /// catch 404 and forward to error handler
