@@ -45,3 +45,6 @@ npm_modules/
 
 ### Bower ###
 bower_components/
+
+### NetBeans ###
+/nbproject/
