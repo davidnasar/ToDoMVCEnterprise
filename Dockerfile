@@ -8,7 +8,7 @@ RUN apt-get install -y less net-tools inetutils-ping curl telnet nmap socat dnsu
 RUN add-apt-repository ppa:chris-lea/node.js && \
   apt-get update && \
   apt-get install -y nodejs && \
-  echo '\n# Node.js\nexport PATH="/data/server/node_modules/.bin:$PATH"' >> /root/.bash_profile
+  echo 'export PATH="/data/server/node_modules/.bin:$PATH"' >> /root/.bash_profile
 
 RUN /bin/bash -l -c "source /root/.bash_profile"
 
