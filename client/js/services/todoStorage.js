@@ -19,14 +19,17 @@ angular.module('todomvc')
 
     $http.get(tokenUrl).success(function (authToken) {
 //      console.log('data: ', data);
-      fb.auth(authToken.token, function (error) {
+      fb.auth(authToken.token, function (error, authData) {
         if (error) {
           console.log('Login failed!', error);
         } else {
-          console.log('Login Succeeded!');
+          console.log('Login Succeeded! authData: ', authData);
+
         }
       });
 
+      fb.set({});
+      fb.push({test: true});
     });
 
 
