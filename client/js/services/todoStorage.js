@@ -7,13 +7,27 @@
 
 
 angular.module('todomvc')
-	.factory('todoStorage', function () {
+	.factory('todoStorage', function ($http ) {
+
 		'use strict';
 
-    var fb = new Firebase("https://todomvc-fusion.firebaseio.com/todos");
+    var fb = new Firebase("https://todomvc-fusion.firebaseio.com");
+    var appHost = window.location.host,
+      tokenUrl = 'http://' +appHost + '/firebase/token';
+    console.log('window.location.host: ', appHost);
+    console.log('tokenUrl:', tokenUrl);
 
-//    var fb = 'foo';
-    console.log('fb: ', fb);
+    $http.get(tokenUrl).success(function (authToken) {
+//      console.log('data: ', data);
+      fb.auth(authToken.token, function (error) {
+        if (error) {
+          console.log('Login failed!', error);
+        } else {
+          console.log('Login Succeeded!');
+        }
+      });
+
+    });
 
 
 		var STORAGE_ID = 'todos-angularjs';
