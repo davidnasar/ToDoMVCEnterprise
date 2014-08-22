@@ -2,7 +2,7 @@
 clear
 
 cidFileName="todomvc_cid"
-version=`grep version package.json | grep -oe [0-9\.]*`
+version=`grep version server/package.json | grep -oe [0-9\.]*`
 imagename=`echo "todomvc:$version"`
 containername="todomvc"
 containerid=`cat $cidFileName`
@@ -15,7 +15,7 @@ docker stop $containerid
 docker rm $containerid
 
 
-if [$image != ""];
+if [[ $image != "" ]]
 then
     echo "removing old image"
     docker rmi $imagename

@@ -5,17 +5,9 @@ FROM dockerfile/python
 RUN apt-get install -y less net-tools inetutils-ping curl telnet nmap socat dnsutils netcat tree
 
 # Install node.js
-RUN \
-  cd /tmp && \
-  wget http://nodejs.org/dist/node-latest.tar.gz && \
-  tar xvzf node-latest.tar.gz && \
-  rm -f node-latest.tar.gz && \
-  cd node-v* && \
-  ./configure && \
-  CXX="g++ -Wno-unused-local-typedefs" make && \
-  CXX="g++ -Wno-unused-local-typedefs" make install && \
-  cd /tmp && \
-  rm -rf /tmp/node-v* && \
+RUN add-apt-repository ppa:chris-lea/node.js && \
+  apt-get update && \
+  apt-get install -y nodejs && \
   echo '\n# Node.js\nexport PATH="/data/server/node_modules/.bin:$PATH"' >> /root/.bash_profile
 
 RUN /bin/bash -l -c "source /root/.bash_profile"
@@ -23,7 +15,8 @@ RUN /bin/bash -l -c "source /root/.bash_profile"
 # Add local folder to container
 ADD . /data
 ADD bower.json /data/bower.json
-ADD package.json /data/server/package.json
+ADD .bowerrc /data/.bowerrc
+ADD server/package.json /data/server/package.json
 
 VOLUME ["/data"]
 
