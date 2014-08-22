@@ -27,15 +27,11 @@ rm -f -r $cidFileName
 echo "building image"
 docker build --rm -t $imagename .
 
-#echo todomvc=$(docker run -i -t -v "$PWD:/data" -p 3000:3000 --name "$container" $imagename)
-echo "running container"
-docker run -i -t -v "$PWD:/data" -p 3000:3000 --cidfile="$cidFileName" $imagename
-
 # clear out nones.
 sudo docker rmi $( sudo docker images | grep '<none>' | tr -s ' ' | cut -d ' ' -f 3)
 
+#echo todomvc=$(docker run -i -t -v "$PWD:/data" -p 3000:3000 --name "$container" $imagename)
+echo "running container"
+docker run -i -t -v "$PWD:/data" -p 3000:3000 --cidfile="$cidFileName" $imagename nodemon
+
 #echo "todomvc_cid=$todomvc" > latest
-
-
-
-

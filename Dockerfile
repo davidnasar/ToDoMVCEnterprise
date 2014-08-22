@@ -1,27 +1,46 @@
 # Pull base image.
-FROM dockerfile/nodejs-bower-grunt
+FROM dockerfile/python
 
 #Utilities
 RUN apt-get install -y less net-tools inetutils-ping curl telnet nmap socat dnsutils netcat tree
 
-# Install bash completions
-RUN echo 'eval "$(grunt --completion=bash)"' >> ~/.bashrc
+# Install node.js
+RUN \
+  cd /tmp && \
+  wget http://nodejs.org/dist/node-latest.tar.gz && \
+  tar xvzf node-latest.tar.gz && \
+  rm -f node-latest.tar.gz && \
+  cd node-v* && \
+  ./configure && \
+  CXX="g++ -Wno-unused-local-typedefs" make && \
+  CXX="g++ -Wno-unused-local-typedefs" make install && \
+  cd /tmp && \
+  rm -rf /tmp/node-v* && \
+  echo '\n# Node.js\nexport PATH="/data/server/node_modules/.bin:$PATH"' >> /root/.bash_profile
+
+RUN /bin/bash -l -c "source /root/.bash_profile"
 
 # Add local folder to container
-ADD . /app
-ADD bower.json /app/bower.json
-ADD package.json /app/package.json
+ADD . /data
+ADD bower.json /data/bower.json
+ADD package.json /data/server/package.json
 
-VOLUME ["/app"]
+VOLUME ["/data"]
 
 EXPOSE 3000
 
-RUN cd /app && \
-  bower --allow-root install &&  \
+RUN cd /data && \
+  npm install -g bower && \
+  bower --allow-root install && \
+  npm install -g nodemon && \
+  cd /data/server/ && \
   npm install
 
-ENTRYPOINT ["node"]
+WORKDIR /data/server
 
-CMD ["app.js"]
+#ENTRYPOINT ["nodemon"]
 
-#sudo docker build -t todomvc .
+#CMD [""]
+
+# sudo docker build -rm -t todomvc .
+# sudo docker run -i -t -v "$PWD:/data" -p 3000:3000 --name todomvc todomvc
