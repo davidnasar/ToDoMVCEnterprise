@@ -81,4 +81,11 @@ angular.module('todomvc')
 				todo.completed = !completed;
 			});
 		};
+
+		$scope.sortableItems = {
+			update: function(e, ui) {
+			},
+			stop: function(e, ui) {
+			}
+		};
 	});
