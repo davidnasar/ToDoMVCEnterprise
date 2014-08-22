@@ -3,6 +3,8 @@
 /**
  * Services that persists and retrieves TODOs from localStorage
  */
+
+var fb = Firebase =
 angular.module('todomvc')
 	.factory('todoStorage', function () {
 		'use strict';
