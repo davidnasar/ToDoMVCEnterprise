@@ -4,10 +4,17 @@
  * Services that persists and retrieves TODOs from localStorage
  */
 
-var fb = Firebase =
+
+
 angular.module('todomvc')
 	.factory('todoStorage', function () {
 		'use strict';
+
+    var fb = new Firebase("https://todomvc-fusion.firebaseio.com/todos");
+
+//    var fb = 'foo';
+    console.log('fb: ', fb);
+
 
 		var STORAGE_ID = 'todos-angularjs';
 
@@ -18,6 +25,11 @@ angular.module('todomvc')
 
 			put: function (todos) {
 				localStorage.setItem(STORAGE_ID, JSON.stringify(todos));
+        console.log('todos:', todos);
+
+        todos.forEach( function (todo) {
+          fb.push({ 'todo': todo});
+        });
 			}
 		};
 	});
