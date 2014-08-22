@@ -5,6 +5,9 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var passport = require('passport');
+var GoogleStrategy = require('passport-google').Strategy;
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -22,8 +25,39 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '..', 'client')));
 
+
+
+//{"web":{"auth_uri":"https://accounts.google.com/o/oauth2/auth","client_secret":"sDmFUgAzUx6srCNgEc6N1_CK","token_uri":"https://accounts.google.com/o/oauth2/token","client_email":"621475068728-hj8v7i58buo567i440gg1t512m23bkjc@developer.gserviceaccount.com","redirect_uris":["http://todomvc.fusionalliance.com:3000/auth/google/return"],"client_x509_cert_url":"https://www.googleapis.com/robot/v1/metadata/x509/621475068728-hj8v7i58buo567i440gg1t512m23bkjc@developer.gserviceaccount.com","client_id":"621475068728-hj8v7i58buo567i440gg1t512m23bkjc.apps.googleusercontent.com","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","javascript_origins":["http://todomvc.localhost:3000"]}}
+
+
+passport.use(new GoogleStrategy({
+      returnURL: 'http://todomvc.fusionalliance.com:3000/auth/google/return',
+      realm: 'http://todomvc.localhost:3000/',
+      clientID: '621475068728-hj8v7i58buo567i440gg1t512m23bkjc.apps.googleusercontent.com',
+      clientSecret: 'sDmFUgAzUx6srCNgEc6N1_CK'
+    },
+    function(identifier, profile, done) {
+      User.findOrCreate({ openId: identifier }, function(err, user) {
+        done(err, user);
+      });
+    }
+));
+
 //app.use('/', routes);
 app.use('/users', users);
+
+// Redirect the user to Google for authentication.  When complete, Google
+// will redirect the user back to the application at
+//     /auth/google/return
+app.get('/auth/google', passport.authenticate('google'));
+
+// Google will redirect the user to this URL after authentication.  Finish
+// the process by verifying the assertion.  If valid, the user will be
+// logged in.  Otherwise, authentication has failed.
+app.get('/auth/google/return',
+    passport.authenticate('google', { successRedirect: '/',
+      failureRedirect: '/login' }));
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -55,7 +89,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
-
 
 module.exports = app;
