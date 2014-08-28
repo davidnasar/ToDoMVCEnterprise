@@ -1,6 +1,20 @@
 ToDoMVCEnterprise
 =================
 
+# Running the site
+
+## Using Docker
+docker build --rm -t todomvc .
+docker run -i -t -v "$PWD:/data" -p 3000:3000 --name todomvc todomvc
+
+## Using Vagrant
+vagrant up --provider=docker
+
+### To Stop Vagrant
+vagrant halt
+
+### To Destory Vagrant
+vagrant destroy -f
 
 # AngularJS TodoMVC Example
 
